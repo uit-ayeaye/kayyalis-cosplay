@@ -1,0 +1,13 @@
+---
+import Cosplay from "../components/Cosplay.astro";
+import { characters } from "../data/cosplay";
+export function getStaticPaths() {
+  return characters.map((character) => ({
+    params: { character: character.id },
+    props: { character },
+  }));
+}
+const { character } = Astro.props;
+---
+
+<Cosplay lang="en" character={character} />

@@ -1,0 +1,34 @@
+---
+interface Props {
+  kind?: "star" | "heart" | "orbit";
+  class?: string;
+}
+const { kind = "star", class: className = "" } = Astro.props;
+---
+
+<svg
+  class:list={["pen-doodle", className]}
+  viewBox="0 0 100 100"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  {kind === "star" ? (
+    <>
+      <path d="M48 9 54 39 86 46 56 52 48 89 42 56 12 49 40 42Z" />
+      <path d="m50 18 1 27 23 3-25 1-2 26-1-25-24-2 24-2Z" />
+      <path d="m79 12 2 7 7 2-7 2-2 8-2-8-7-2 7-2Z" />
+    </>
+  ) : kind === "heart" ? (
+    <>
+      <path d="M49 77C-9 43 14 12 36 27l14 14c23-37 58-13 28 15Z" />
+      <path d="M19 29c-5 13 7 28 25 39M64 14l4-8m10 16 9-6M10 65l-6 7" />
+    </>
+  ) : (
+    <>
+      <path d="M18 62C-8 34 27 5 58 19s40 48 5 61C37 92 7 70 20 42c9-20 50-22 59-2" />
+      <path d="m80 14 2 16 15 3-15 3-4 17-2-18-14-4 15-2Z" />
+      <path d="M15 85q13 8 26 3" />
+    </>
+  )}
+</svg>

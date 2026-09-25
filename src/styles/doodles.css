@@ -1,0 +1,117 @@
+.pen-doodle {
+  width: clamp(36px, 5vw, 74px);
+  height: auto;
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  color: var(--berry, var(--wine));
+  opacity: 0.72;
+  overflow: visible;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(
+    2px 3px 0 color-mix(in srgb, currentColor 8%, transparent)
+  );
+  animation: pen-float 7s ease-in-out infinite;
+}
+.pen-doodle path {
+  vector-effect: non-scaling-stroke;
+}
+.pen-doodle:nth-of-type(2) {
+  animation-delay: -3s;
+  rotate: 12deg;
+}
+.doodle-corner {
+  right: 3%;
+  top: 12%;
+}
+.doodle-low {
+  left: 3%;
+  bottom: 9%;
+  rotate: -15deg;
+}
+.doodle-heading {
+  right: -68px;
+  top: -28px;
+  width: 58px;
+}
+.hero,
+.cos-hero,
+.cos-contact,
+.contact-section,
+.offstage,
+.about-cosplay {
+  position: relative;
+}
+h2:has(> .pen-doodle) {
+  position: relative;
+  width: fit-content;
+}
+.pen-underline {
+  position: relative;
+}
+.pen-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 94%;
+  height: 9px;
+  border-bottom: 2px solid currentColor;
+  border-radius: 0 0 50% 35%;
+  rotate: -2deg;
+  opacity: 0.5;
+  pointer-events: none;
+}
+@keyframes pen-float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: -4deg;
+  }
+  50% {
+    translate: 2px -7px;
+    rotate: 4deg;
+  }
+}
+[data-softnav] .welcome-charm {
+  display: none;
+}
+:root {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+::view-transition-old(root) {
+  animation-duration: 160ms;
+}
+::view-transition-new(root) {
+  animation-duration: 220ms;
+}
+@media (max-width: 600px) {
+  .doodle-heading {
+    right: -42px;
+    top: -20px;
+    width: 36px;
+  }
+  .doodle-corner {
+    top: 9%;
+    right: 5%;
+  }
+  .doodle-low {
+    left: 2%;
+    bottom: 4%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pen-doodle {
+    animation: none;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}

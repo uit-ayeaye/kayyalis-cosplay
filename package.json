@@ -1,0 +1,29 @@
+{
+  "name": "kayyalis-cosplay",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1 --port 4322",
+    "build": "astro check && astro build && node scripts/verify-build.mjs",
+    "preview": "astro preview --host 127.0.0.1 --port 4322",
+    "check": "astro check",
+    "test": "node scripts/verify-build.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource-variable/noto-sans-thai": "^5.3.0",
+    "@fontsource-variable/playfair-display": "^5.3.0",
+    "astro": "^7.3.5",
+    "motion": "^13.4.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.0",
+    "typescript": "^6.0.3"
+  }
+}

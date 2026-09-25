@@ -1,0 +1,28 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "../styles/doodles.css";
+---
+
+<ClientRouter />
+<script is:inline>
+  (() => {
+    try {
+      const saved = localStorage.getItem("dada-theme");
+      document.documentElement.dataset.theme =
+        saved === "dark" ||
+        (saved !== "light" &&
+          matchMedia("(prefers-color-scheme: dark)").matches)
+          ? "dark"
+          : "light";
+    } catch {
+      document.documentElement.dataset.theme = matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches
+        ? "dark"
+        : "light";
+    }
+  })();
+</script>
+<script>
+  import "../scripts/preferences";
+</script>
