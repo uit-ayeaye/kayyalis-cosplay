@@ -1,7 +1,12 @@
+import { initReveals } from "./reveals";
+import { createGallery } from "./gallery";
 import { initPreviews } from "./previews";
 import type { photos, clips, characters } from "../data/cosplay";
+let activeBody: HTMLElement | undefined;
 let teardown: (() => void) | undefined;
 function initializePage() {
+  if (activeBody === document.body) return;
+  activeBody = document.body;
   teardown?.();
   if (!document.querySelector("#cos-media-data")) return;
   const controller = new AbortController();
@@ -157,25 +162,33 @@ function initializePage() {
   const counter = document.querySelector<HTMLElement>("#media-counter")!;
   const prev = media.querySelector<HTMLButtonElement>("[data-prev]")!;
   const next = media.querySelector<HTMLButtonElement>("[data-next]")!;
-  function render() {
+  const gallery = createGallery(stage, signal);
+  async function render() {
     const old = stage.querySelector("video");
     if (old) {
       old.pause();
       old.removeAttribute("src");
       old.load();
     }
-    stage.replaceChildren();
-    counter.textContent = `${String(index + 1).padStart(2, "0")} / ${String(queue.length).padStart(2, "0")} · ${mode === "photo" ? (th ? "ภาพถ่าย" : "PHOTO DIARY") : (th ? "วิดีโอ" : "IN MOTION")}`;
+    if (mode === "clip") gallery.reset();
+    counter.textContent = `${String(index + 1).padStart(2, "0")} / ${String(queue.length).padStart(2, "0")} · ${mode === "photo" ? (th ? "ภาพถ่าย" : "PHOTO DIARY") : th ? "วิดีโอ" : "IN MOTION"}`;
     prev.disabled = queue.length < 2;
     next.disabled = queue.length < 2;
     if (mode === "photo") {
       const p = data.photos.find((p) => p.id === queue[index])!;
-      const img = document.createElement("img");
-      img.src = `${data.base}/cosplay/photos/${p.id}.webp`;
-      img.alt = p.alt;
-      img.width = p.width;
-      img.height = p.height;
-      stage.append(img);
+      const nearby = [-1, 1].map(
+        (delta) =>
+          `${data.base}/cosplay/photos/${queue[(index + delta + queue.length) % queue.length]}.webp`,
+      );
+      if (
+        !(await gallery.show(
+          `${data.base}/cosplay/photos/${p.id}.webp`,
+          p.alt,
+          nearby,
+          `${data.base}/cosplay/photos/${p.id}-small.webp`,
+        ))
+      )
+        return;
       title.textContent = p.name;
       detail.textContent = p.series;
       credit.textContent = p.credit
@@ -315,17 +328,7 @@ function initializePage() {
     },
     { signal, passive: true },
   );
-  const reveal = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in-view");
-          reveal.unobserve(entry.target);
-        }
-      }),
-    { threshold: 0.08 },
-  );
-  document.querySelectorAll(".reveal").forEach((el) => reveal.observe(el));
+  initReveals(".reveal", signal);
   const progress = document.querySelector<HTMLElement>(".scroll-progress")!;
   let ticking = false;
   function updateProgress() {
@@ -596,9 +599,10 @@ function initializePage() {
 
   teardown = () => {
     controller.abort();
-    reveal.disconnect();
+
     document.querySelectorAll("video").forEach((v) => v.pause());
   };
 }
 document.addEventListener("astro:page-load", initializePage);
+document.addEventListener("portfolio:localize", initializePage);
 document.addEventListener("astro:before-swap", () => teardown?.());
